@@ -111,8 +111,8 @@ class _DetailsPageState extends State<DetailsPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 100),
                       child: TabBar(
-                        labelColor: Color.fromARGB(248, 233, 132, 132),
-                        indicatorColor: Color.fromARGB(248, 233, 132, 132),
+                        labelColor: accentColor,
+                        indicatorColor: accentColor,
                         unselectedLabelColor: Colors.grey,
                         tabs: [
                           Tab(text: 'Skills'),
@@ -302,7 +302,7 @@ class _DetailsPageState extends State<DetailsPage> {
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-          color: Color.fromARGB(248, 233, 132, 132),
+          color: accentColor,
           borderRadius: BorderRadius.circular(5),
         ),
         // width: MediaQuery.of(context).size.width * 0.5,

@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hover_widget/hover_widget.dart';
+import 'package:pet_adoption_app_task/screens/history_page.dart';
 
 import 'details_page.dart';
 
@@ -43,6 +47,15 @@ class _HomePageState extends State<HomePage> {
       '6 mo.',
     ],
   };
+
+  List<Color> cardColors = [
+    Color(0xFFF4BFBF),
+    Color(0xFFFFD9C0),
+    Color(0xFF9CB4CC),
+    Color(0xFF748DA6),
+  ];
+  int colorChooser = Random().nextInt(4);
+
   // Map<String, dynamic> pets = {
   //   'Dog': [
   //     imageUrls[0],
@@ -59,124 +72,113 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black87,
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://static.vecteezy.com/system/resources/previews/007/537/995/non_2x/dog-logo-cartoon-cute-pet-smile-puppy-mascot-wear-glasses-on-white-background-vector.jpg'),
+      body: Column(
+        children: [
+          Expanded(
+            child: AnimationLimiter(child: petCardGrid()),
           ),
-        ),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(context: context, delegate: MySearchDelegate());
-              }),
         ],
-        title: const Text('User Name'),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height * .8,
-                child: petCardGrid(),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
 
   GridView petCardGrid() {
-    return GridView.builder(
-      itemCount: 5,
+    return GridView.count(
+      crossAxisCount: 2,
       physics: BouncingScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 7,
-        mainAxisSpacing: 7,
-      ),
+      // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      //   crossAxisCount: 2,
+      //   crossAxisSpacing: 7,
+      //   mainAxisSpacing: 7,
+      // ),
       padding: EdgeInsets.all(10),
-      itemBuilder: (context, index) {
-        // Pet Card
-        return ButtonFeedback(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailsPage(
-                    pet: imageUrls[index],
-                  ),
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 10,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                    color: Colors.white,
-                  ),
-                  height: 100,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Hero(
-                          tag: 'Pet Card Image ${imageUrls[index]![2]}',
-                          child: Padding(
-                            padding: const EdgeInsets.all(25),
-                            child: Image.network(
-                              imageUrls[index]![2],
-                            ),
-                          ),
+      children: List.generate(
+        5,
+        (index) {
+          // Pet Card
+          return AnimationConfiguration.staggeredGrid(
+            position: index,
+            duration: const Duration(milliseconds: 375),
+            columnCount: 2,
+            child: SlideAnimation(
+              verticalOffset: 100,
+              delay: Duration(milliseconds: (index * 100).toInt()),
+              child: FadeInAnimation(
+                delay: Duration(milliseconds: (index * 100).toInt()),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailsPage(
+                          pet: imageUrls[index],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(imageUrls[index]![1]),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(4),
-                        height: 25,
-                        color: Colors.grey[200],
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(imageUrls[index]![0]),
-                            VerticalDivider(
-                              color: Colors.black87,
-                              thickness: 1,
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 10,
+                              spreadRadius: 5,
                             ),
-                            Text(imageUrls[index]![3]),
+                          ],
+                          color: cardColors[Random().nextInt(4)],
+                        ),
+                        height: 100,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Hero(
+                                tag: 'Pet Card Image ${imageUrls[index]![2]}',
+                                child: Padding(
+                                  padding: const EdgeInsets.all(25),
+                                  child: Image.network(
+                                    imageUrls[index]![2],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(imageUrls[index]![1]),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(4),
+                              height: 25,
+                              color: Color.fromARGB(111, 255, 255, 255),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(imageUrls[index]![0]),
+                                  VerticalDivider(
+                                    color: Colors.black54,
+                                    thickness: 1,
+                                  ),
+                                  Text(imageUrls[index]![3]),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
