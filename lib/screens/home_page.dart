@@ -208,9 +208,13 @@ class MySearchDelegate extends SearchDelegate {
       onPressed: () => close(context, null), icon: Icon(Icons.arrow_back));
 
   @override
-  Widget buildResults(BuildContext context) => Center(
-        child: Text(query),
-      );
+  Widget buildResults(BuildContext context) {
+    final petProvider = Provider.of<PetDetailsProvider>(context);
+    List petNames = petProvider.petNamesList();
+    return Center(
+      child: Text(petNames.contains(query) ? '' : 'No Results'),
+    );
+  }
 
   @override
   Widget buildSuggestions(BuildContext context) {
