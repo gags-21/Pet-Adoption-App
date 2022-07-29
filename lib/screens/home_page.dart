@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(
                               builder: (context) => DetailsPage(
                                 index: index,
-                                pet: petDetailsMap[index],
+                                pet: petProvider.petDetails(index),
                               ),
                             ),
                           )
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                      petProvider.isAdopted(index).toString()),
+                                      petProvider.petName(index).toString()),
                                 ),
                                 Container(
                                   padding: EdgeInsets.symmetric(
@@ -208,11 +208,51 @@ class MySearchDelegate extends SearchDelegate {
       onPressed: () => close(context, null), icon: Icon(Icons.arrow_back));
 
   @override
-  Widget buildResults(BuildContext context) =>
-      IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back));
+  Widget buildResults(BuildContext context) => Center(
+        child: Text(query),
+      );
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back));
+    final petProvider = Provider.of<PetDetailsProvider>(context);
+    List petNames = petProvider.petNamesList();
+    List name = [
+      for (int i = 0; i < petNames.length; i++)
+        if (petNames[i].toString().toLowerCase().contains(query.toLowerCase()))
+          petNames[i]
+    ];
+    // List suggestions = name.where((searched) {
+    //   searched = searched.toLowerCase();
+    //   query = query.toLowerCase();
+    //   return searched.contains(query);
+    // }).toList();
+    return ListView.builder(
+        itemCount: name.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(
+                petProvider
+                    .petDetails(petNames.indexOf(name[index]))
+                    .image
+                    .toString(),
+              ),
+            ),
+            title: Text(name[index]),
+            onTap: () {
+              showResults(context);
+              petProvider.petName(index);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsPage(
+                    index: petNames.indexOf(name[index]),
+                    pet: petProvider.petDetails(petNames.indexOf(name[index])),
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 }

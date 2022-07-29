@@ -11,6 +11,10 @@ class PetDetailsProvider extends ChangeNotifier {
 
   int get totalPets => petDetailsMap.length;
 
+  PetDetails petDetails(int index) {
+    return PetDetails.fromList(petDetailsMap[index]!.toList());
+  }
+
   String petName(int index) {
     PetDetails pr = PetDetails.fromList(petDetailsMap[index]!.toList());
     return pr.name.toString();
@@ -31,6 +35,15 @@ class PetDetailsProvider extends ChangeNotifier {
     }
     adoptedPets.sort((a, b) => b.adoptedAt!.compareTo(a.adoptedAt!));
     return adoptedPets;
+  }
+
+  List<String> petNamesList() {
+    List<String> petNames = [];
+    for (int i = 0; i < petDetailsMap.length; i++) {
+      PetDetails pr = PetDetails.fromList(petDetailsMap[i]!.toList());
+      petNames.add(pr.name.toString());
+    }
+    return petNames;
   }
 
   // updating changes to the pet details
@@ -88,7 +101,7 @@ class PetDetailsProvider extends ChangeNotifier {
     ],
     2: [
       'Dog',
-      'Milo',
+      'Milos',
       'https://media.istockphoto.com/photos/beagle-5-years-old-sitting-in-front-of-white-background-picture-id962855368?b=1&k=20&m=962855368&s=612x612&w=0&h=7ioz-J7lnJjKO5t5pVsXz-5jAtAbG2jpam1viJ3Rw_4=',
       '6 mo.',
       'false',
