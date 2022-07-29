@@ -3,11 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hover_widget/hover_widget.dart';
+import 'package:pet_adoption_app_task/provider/pet_details_provider.dart';
 import 'package:pet_adoption_app_task/provider/theme_provider.dart';
 import 'package:pet_adoption_app_task/screens/history_page.dart';
 import 'package:provider/provider.dart';
 
 import '../models/constants.dart';
+import '../models/pet_details_model.dart';
 import 'details_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,54 +20,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static Map<int, List<String>> imageUrls = {
-    0: [
-      'Cat',
-      'Bella',
-      'https://images.unsplash.com/photo-1595433707802-6b2626ef1c91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80',
-      '6 mo.',
-    ],
-    1: [
-      'Dog',
-      'Milo',
-      'https://us.123rf.com/450wm/isselee/isselee1903/isselee190300561/119670302-golden-retriever-3-months-old-sitting-in-front-of-white-background.jpg?ver=6',
-      '6 mo.',
-    ],
-    2: [
-      'Dog',
-      'Milo',
-      'https://media.istockphoto.com/photos/beagle-5-years-old-sitting-in-front-of-white-background-picture-id962855368?b=1&k=20&m=962855368&s=612x612&w=0&h=7ioz-J7lnJjKO5t5pVsXz-5jAtAbG2jpam1viJ3Rw_4=',
-      '6 mo.',
-    ],
-    3: [
-      'Cat',
-      'Zoe',
-      'https://thumbs.dreamstime.com/b/single-black-kitten-white-background-big-eyes-one-90775523.jpg',
-      '6 mo.',
-    ],
-    4: [
-      'Cat',
-      'Lola',
-      'https://media.istockphoto.com/photos/ginger-cat-picture-id1073475928?k=20&m=1073475928&s=612x612&w=0&h=50Dbbf5cz_-NaS74tLY64PubIWMPTu09DnUnKd8z1ag=',
-      '6 mo.',
-    ],
-  };
-
-  // int colorChooser = Random().nextInt(4);
-
-  // Map<String, dynamic> pets = {
-  //   'Dog': [
-  //     imageUrls[0],
-  //     imageUrls[1],
-  //   ],
-  //   'Cats':[
-  //     imageUrls[2],
-  //     imageUrls[3],
-  //     imageUrls[4],
-  //   ],
-
-  // };
-
   @override
   Widget build(BuildContext context) {
     final appTheme = Provider.of<ThemeProvider>(context).themeMode;
@@ -74,14 +28,18 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Expanded(
-            child: AnimationLimiter(child: petCardGrid(appTheme)),
+            child: Consumer<PetDetailsProvider>(
+                builder: (context, petProvider, _) {
+              return AnimationLimiter(
+                  child: petCardGrid(appTheme, petProvider));
+            }),
           ),
         ],
       ),
     );
   }
 
-  GridView petCardGrid(ThemeMode appTheme) {
+  GridView petCardGrid(ThemeMode appTheme, PetDetailsProvider petProvider) {
     final isLight = appTheme == ThemeMode.light;
     return GridView.count(
       crossAxisCount: 2,
@@ -93,7 +51,7 @@ class _HomePageState extends State<HomePage> {
       // ),
       padding: EdgeInsets.all(10),
       children: List.generate(
-        5,
+        petProvider.totalPets,
         (index) {
           // Pet Card
           return AnimationConfiguration.staggeredGrid(
@@ -107,14 +65,17 @@ class _HomePageState extends State<HomePage> {
                 delay: Duration(milliseconds: (index * 100).toInt()),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailsPage(
-                          pet: imageUrls[index],
-                        ),
-                      ),
-                    );
+                    !petProvider.isAdopted(index)
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsPage(
+                                index: index,
+                                pet: petDetailsMap[index],
+                              ),
+                            ),
+                          )
+                        : null;
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -133,50 +94,86 @@ class _HomePageState extends State<HomePage> {
                               ? lightCardColors[Random().nextInt(4)]
                               : darkCardColors[Random().nextInt(4)],
                         ),
-                        height: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        height: 150,
+                        child: Stack(
                           children: [
-                            Expanded(
-                              child: Hero(
-                                tag: 'Pet Card Image ${imageUrls[index]![2]}',
-                                child: Padding(
-                                  padding: const EdgeInsets.all(25),
-                                  child: Image.network(
-                                    imageUrls[index]![2],
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            CircularProgressIndicator(),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Hero(
+                                    tag:
+                                        'Pet Card Image ${petDetailsMap[index]![2]}',
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(25),
+                                      child: Image.network(
+                                        petDetailsMap[index]![2],
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                CircularProgressIndicator(),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(imageUrls[index]![1]),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 5),
-                              height: 35,
-                              color: isLight
-                                  ? lightCardBottomColor
-                                  : darkCardBottomColor,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(imageUrls[index]![0]),
-                                  VerticalDivider(
-                                    color:
-                                        isLight ? Colors.black : Colors.white,
-                                    thickness: 1,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                      petProvider.isAdopted(index).toString()),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  height: 35,
+                                  color: isLight
+                                      ? lightCardBottomColor
+                                      : darkCardBottomColor,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(petDetailsMap[index]![0]),
+                                      VerticalDivider(
+                                        color: isLight
+                                            ? Colors.black
+                                            : Colors.white,
+                                        thickness: 1,
+                                      ),
+                                      Text(petDetailsMap[index]![3]),
+                                    ],
                                   ),
-                                  Text(imageUrls[index]![3]),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+                            petProvider.isAdopted(index)
+                                ? Container(
+                                    color: isLight
+                                        ? Color.fromARGB(82, 255, 255, 255)
+                                        : Color.fromARGB(121, 0, 0, 0),
+                                    child: Center(
+                                      child: Container(
+                                        color: isLight
+                                            ? Color.fromARGB(207, 78, 78, 78)
+                                            : Colors.white
+                                                .withOpacity(0.8)
+                                                .withOpacity(0.8),
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: Center(
+                                            child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Already Adopted',
+                                            style: TextStyle(
+                                                color: isLight
+                                                    ? whiteTextColor
+                                                    : blackTextColor),
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
                           ],
                         ),
                       ),

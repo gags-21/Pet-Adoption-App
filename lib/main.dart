@@ -5,6 +5,8 @@ import 'package:pet_adoption_app_task/screens/history_page.dart';
 import 'package:pet_adoption_app_task/screens/home_page.dart';
 import 'package:provider/provider.dart';
 
+import 'provider/pet_details_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
@@ -15,8 +17,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => ThemeProvider()..initialize(),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => ThemeProvider()..initialize(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => PetDetailsProvider()..initialize(),
+          ),
+        ],
         builder: (context, snapshot) {
           final themeProvider = Provider.of<ThemeProvider>(context);
           return MaterialApp(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:pet_adoption_app_task/models/constants.dart';
+import 'package:pet_adoption_app_task/models/pet_details_model.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/pet_details_provider.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({Key? key}) : super(key: key);
@@ -9,42 +11,49 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              'History 🗓️',
-              style: headlineTextStyle,
+      body: Consumer<PetDetailsProvider>(builder: (context, petProvider, _) {
+        List<PetDetails> adoptedPets = petProvider.adoptedPets();
+        return Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                'History 🗓️',
+                style: headlineTextStyle,
+              ),
             ),
-          ),
-          Divider(),
-          Expanded(
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://static.vecteezy.com/system/resources/previews/007/537/995/non_2x/dog-logo-cartoon-cute-pet-smile-puppy-mascot-wear-glasses-on-white-background-vector.jpg'),
-                  ),
-                  title: Text(
-                    'Pet Name',
-                  ),
-                  subtitle: Text(
-                    'Pet Type | Date: 28/07/2022',
-                  ),
-                  trailing: Text(
-                    '₹ 100',
-                    style: priceTextStyle.copyWith(fontSize: 20),
-                  ),
-                );
-              },
+            Divider(),
+            Expanded(
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                itemCount: adoptedPets.length,
+                itemBuilder: (context, index) {
+                  return Consumer<PetDetailsProvider>(
+                      builder: (context, petProvider, _) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          adoptedPets[index].image.toString(),
+                        ),
+                      ),
+                      title: Text(
+                        adoptedPets[index].name.toString(),
+                      ),
+                      subtitle: Text(
+                        '${adoptedPets[index].type} | Date: ${adoptedPets[index].adoptedAt}',
+                      ),
+                      trailing: Text(
+                        '₹ 100',
+                        style: priceTextStyle.copyWith(fontSize: 20),
+                      ),
+                    );
+                  });
+                },
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 }
