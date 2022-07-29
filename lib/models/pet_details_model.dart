@@ -12,7 +12,7 @@ class PetDetails {
   String? type;
   String? age;
   String? image;
-  String? adoptedAt;
+  DateTime? adoptedAt;
   String? isAdopted;
 
   factory PetDetails.fromList(List<String> list) => PetDetails(
@@ -21,7 +21,7 @@ class PetDetails {
         image: list[2],
         age: list[3],
         isAdopted: list[4],
-        adoptedAt: list[5],
+        adoptedAt: DateTime.tryParse(list[5]),
       );
 
   // Map<String, dynamic> toJson() => {

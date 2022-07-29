@@ -40,7 +40,7 @@ class HistoryPage extends StatelessWidget {
                         adoptedPets[index].name.toString(),
                       ),
                       subtitle: Text(
-                        '${adoptedPets[index].type} | Date: ${adoptedPets[index].adoptedAt}',
+                        '${adoptedPets[index].type} | Date: ${adoptedPets[index].adoptedAt!.day}/${adoptedPets[index].adoptedAt!.month}/${adoptedPets[index].adoptedAt!.year}',
                       ),
                       trailing: Text(
                         '₹ 100',

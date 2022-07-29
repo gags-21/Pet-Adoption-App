@@ -5,7 +5,7 @@ import 'package:pet_adoption_app_task/models/pet_details_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PetDetailsProvider extends ChangeNotifier {
-  PetDetails pr = PetDetails.fromList(petDetailsMap[1]!.toList());
+  // PetDetails pr = PetDetails.fromList(petDetailsMap[1]!.toList());
 
   // providing the pet details to the other screens
 
@@ -29,7 +29,7 @@ class PetDetailsProvider extends ChangeNotifier {
         adoptedPets.add(pr);
       }
     }
-    adoptedPets.sort((a, b) => b.adoptedAt!.compareTo(a.adoptedAt.toString()));
+    adoptedPets.sort((a, b) => b.adoptedAt!.compareTo(a.adoptedAt!));
     return adoptedPets;
   }
 
@@ -38,8 +38,8 @@ class PetDetailsProvider extends ChangeNotifier {
   void isAdoptedUpdate(bool isAdoptedd, int index) async {
     petDetailsMap.update(index, (value) {
       value[4] = isAdoptedd ? 'true' : 'false';
-      value[5] =
-          '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
+      value[5] = DateTime.now().toString();
+      // '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
       return value;
     });
 
@@ -53,12 +53,12 @@ class PetDetailsProvider extends ChangeNotifier {
   }
 
   initialize() async {
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     // final encodedDetailsMap = _prefs.getString('allPetDetails');
     // petDetailsMap = json.decode(encodedDetailsMap ?? petDetailsMap.toString());
     // _prefs.clear();
     for (int i = 0; i < 5; i++) {
-      final petDetailsOf$i = _prefs.getStringList('petDetailsOf$i');
+      final petDetailsOf$i = prefs.getStringList('petDetailsOf$i');
       petDetailsMap.update(i, (value) {
         return petDetailsOf$i != null
             ? List.from(petDetailsOf$i)
