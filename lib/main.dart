@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pet_adoption_app_task/models/constants.dart';
+import 'package:pet_adoption_app_task/provider/theme_provider.dart';
 import 'package:pet_adoption_app_task/screens/history_page.dart';
 import 'package:pet_adoption_app_task/screens/home_page.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,13 +15,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePageState(),
-    );
+    return ChangeNotifierProvider(
+        create: (_) => ThemeProvider()..initialize(),
+        builder: (context, snapshot) {
+          final themeProvider = Provider.of<ThemeProvider>(context);
+          return MaterialApp(
+            title: 'Flutter Demo',
+            themeMode: themeProvider.themeMode,
+            theme: MyThemes.lightTheme,
+            darkTheme: MyThemes.darkTheme,
+            home: const MyHomePageState(),
+          );
+        });
   }
 }
 
@@ -38,11 +45,9 @@ class _MyHomePageStateState extends State<MyHomePageState> {
   int currentScreen = 0;
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black87,
         leading: Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10),
           child: CircleAvatar(
@@ -52,10 +57,20 @@ class _MyHomePageStateState extends State<MyHomePageState> {
         ),
         actions: [
           IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(context: context, delegate: MySearchDelegate());
-              }),
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: MySearchDelegate());
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sunny),
+            onPressed: () {
+              themeProvider.isDarkMode
+                  ? // toggle to light : //toggle to dark
+                  themeProvider.toggleTheme(false)
+                  : themeProvider.toggleTheme(true);
+            },
+          ),
         ],
         title: const Text('User Name'),
       ),

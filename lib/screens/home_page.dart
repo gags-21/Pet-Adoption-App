@@ -3,8 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hover_widget/hover_widget.dart';
+import 'package:pet_adoption_app_task/provider/theme_provider.dart';
 import 'package:pet_adoption_app_task/screens/history_page.dart';
+import 'package:provider/provider.dart';
 
+import '../models/constants.dart';
 import 'details_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,13 +51,7 @@ class _HomePageState extends State<HomePage> {
     ],
   };
 
-  List<Color> cardColors = [
-    Color(0xFFF4BFBF),
-    Color(0xFFFFD9C0),
-    Color(0xFF9CB4CC),
-    Color(0xFF748DA6),
-  ];
-  int colorChooser = Random().nextInt(4);
+  // int colorChooser = Random().nextInt(4);
 
   // Map<String, dynamic> pets = {
   //   'Dog': [
@@ -71,18 +68,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appTheme = Provider.of<ThemeProvider>(context).themeMode;
+
     return Scaffold(
       body: Column(
         children: [
           Expanded(
-            child: AnimationLimiter(child: petCardGrid()),
+            child: AnimationLimiter(child: petCardGrid(appTheme)),
           ),
         ],
       ),
     );
   }
 
-  GridView petCardGrid() {
+  GridView petCardGrid(ThemeMode appTheme) {
+    final isLight = appTheme == ThemeMode.light;
     return GridView.count(
       crossAxisCount: 2,
       physics: BouncingScrollPhysics(),
@@ -129,7 +129,9 @@ class _HomePageState extends State<HomePage> {
                               spreadRadius: 5,
                             ),
                           ],
-                          color: cardColors[Random().nextInt(4)],
+                          color: isLight
+                              ? lightCardColors[Random().nextInt(4)]
+                              : darkCardColors[Random().nextInt(4)],
                         ),
                         height: 100,
                         child: Column(
@@ -142,6 +144,9 @@ class _HomePageState extends State<HomePage> {
                                   padding: const EdgeInsets.all(25),
                                   child: Image.network(
                                     imageUrls[index]![2],
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            CircularProgressIndicator(),
                                   ),
                                 ),
                               ),
@@ -151,9 +156,12 @@ class _HomePageState extends State<HomePage> {
                               child: Text(imageUrls[index]![1]),
                             ),
                             Container(
-                              padding: EdgeInsets.all(4),
-                              height: 25,
-                              color: Color.fromARGB(111, 255, 255, 255),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 5),
+                              height: 35,
+                              color: isLight
+                                  ? lightCardBottomColor
+                                  : darkCardBottomColor,
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
@@ -161,7 +169,8 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(imageUrls[index]![0]),
                                   VerticalDivider(
-                                    color: Colors.black54,
+                                    color:
+                                        isLight ? Colors.black : Colors.white,
                                     thickness: 1,
                                   ),
                                   Text(imageUrls[index]![3]),

@@ -36,11 +36,7 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black87,
-        elevation: 0,
-      ),
+      appBar: AppBar(),
       body: Stack(
         children: [
           Column(
@@ -176,14 +172,7 @@ class _DetailsPageState extends State<DetailsPage> {
               // emissionFrequency: 0.5,
               // particleDrag: 0.5,
               // shouldLoop: false,
-              colors: [
-                Color.fromARGB(248, 233, 132, 132),
-                Color.fromARGB(248, 238, 178, 178),
-                Color.fromARGB(248, 235, 98, 98),
-                Color.fromARGB(113, 233, 132, 132),
-                Color.fromARGB(255, 15, 173, 247),
-                Colors.deepPurpleAccent,
-              ],
+              colors: confettiColors,
             ),
           ),
           Align(
@@ -197,14 +186,7 @@ class _DetailsPageState extends State<DetailsPage> {
               // emissionFrequency: 0.5,
               // particleDrag: 0.5,
               // shouldLoop: false,
-              colors: [
-                Color.fromARGB(248, 233, 132, 132),
-                Color.fromARGB(248, 238, 178, 178),
-                Color.fromARGB(248, 235, 98, 98),
-                Color.fromARGB(113, 233, 132, 132),
-                Color.fromARGB(255, 15, 173, 247),
-                Colors.deepPurpleAccent,
-              ],
+              colors: confettiColors,
             ),
           ),
 
@@ -217,7 +199,6 @@ class _DetailsPageState extends State<DetailsPage> {
               context,
               title: 'Adopt Me',
               onTap: () {
-                print('object');
                 // confetti & logic
                 setState(() {
                   _confettiController.play();
@@ -262,6 +243,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                     'You’ve now adopted \n 💙 <pet_name> 💙',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
+                                      color: blackTextColor,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
