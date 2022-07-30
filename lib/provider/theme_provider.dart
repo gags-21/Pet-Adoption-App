@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pet_adoption_app_task/models/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -13,8 +12,8 @@ class ThemeProvider extends ChangeNotifier {
   Future<ThemeMode> toggleTheme(bool toDark) async {
     themeMode = toDark ? ThemeMode.dark : ThemeMode.light;
 
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    _prefs.setString('theme', toDark ? 'dark' : 'light');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('theme', toDark ? 'dark' : 'light');
     notifyListeners();
     return themeMode;
   }
@@ -33,22 +32,4 @@ class ThemeProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-}
-
-// Custom Theme Data
-class MyThemes {
-  static final darkTheme = ThemeData.dark().copyWith(
-    appBarTheme: AppBarTheme(
-      elevation: 0,
-      foregroundColor: whiteTextColor,
-      backgroundColor: Colors.transparent,
-    ),
-  );
-  static final lightTheme = ThemeData.light().copyWith(
-    appBarTheme: AppBarTheme(
-      elevation: 0,
-      foregroundColor: blackTextColor,
-      backgroundColor: Colors.transparent,
-    ),
-  );
 }

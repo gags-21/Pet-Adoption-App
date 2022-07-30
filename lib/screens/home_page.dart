@@ -46,7 +46,6 @@ class _HomePageState extends State<HomePage> {
       children: List.generate(
         petProvider.totalPets,
         (index) {
-          // Pet Card
           return AnimationConfiguration.staggeredGrid(
             position: index,
             duration: const Duration(milliseconds: 375),
@@ -113,8 +112,6 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.all(25),
                         child: Image.network(
                           petDetails.image.toString(),
-                          errorBuilder: (context, error, stackTrace) =>
-                              const CircularProgressIndicator(),
                         ),
                       ),
                     ),

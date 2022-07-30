@@ -44,9 +44,9 @@ class PetDetailsProvider extends ChangeNotifier {
 
   //* updating changes to the pet details
 
-  void isAdoptedUpdate(bool isAdoptedd, int index) async {
+  void isAdoptedUpdate(bool isAdopted, int index) async {
     petDetailsMap.update(index, (value) {
-      value[4] = isAdoptedd ? 'true' : 'false';
+      value[4] = isAdopted ? 'true' : 'false';
       value[5] = DateTime.now().toString();
       return value;
     });

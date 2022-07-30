@@ -20,7 +20,7 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  // Gennerating a random price for pet
+  // Generating a random price for pet
   int price = Random().nextInt(10000) + 5000;
 
   late ConfettiController _confettiController;
