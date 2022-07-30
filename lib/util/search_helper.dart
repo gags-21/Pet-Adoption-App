@@ -47,6 +47,7 @@ class MySearchDelegate extends SearchDelegate {
     // Returning suggestions based on user input
     return ListView.builder(
       itemCount: name.length,
+      physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
         return ListTile(
           key: const Key('searchResults'),

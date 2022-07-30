@@ -4,6 +4,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_adoption_app_task/models/constants.dart';
 import 'package:pet_adoption_app_task/models/pet_details_model.dart';
+import 'package:pet_adoption_app_task/util/image_viewer.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/pet_details_provider.dart';
@@ -59,8 +60,18 @@ class _DetailsPageState extends State<DetailsPage> {
                           tag: 'Pet Card Image ${widget.pet.image}',
                           child: Padding(
                             padding: const EdgeInsets.all(25),
-                            child: Image.network(
-                              widget.pet.image.toString(),
+                            child: GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PetImageViewer(
+                                    imgUrl: widget.pet.image.toString(),
+                                  ),
+                                ),
+                              ),
+                              child: Image.network(
+                                widget.pet.image.toString(),
+                              ),
                             ),
                           ),
                         ),

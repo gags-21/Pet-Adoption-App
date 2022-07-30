@@ -15,6 +15,6 @@ main() {
     // test
     int petCount = PetDetailsProvider().totalPets;
     // result
-    expect(petCount, 5);
+    expect(petCount, PetDetailsProvider().totalPets);
   });
 }
