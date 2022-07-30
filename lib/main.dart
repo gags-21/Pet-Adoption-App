@@ -66,6 +66,7 @@ class _MyHomePageStateState extends State<MyHomePageState> {
         ),
         actions: [
           IconButton(
+            key: const Key('searchButton'),
             icon: Icon(Icons.search),
             onPressed: () {
               showSearch(context: context, delegate: MySearchDelegate());

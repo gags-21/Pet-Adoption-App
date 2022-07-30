@@ -234,6 +234,7 @@ class MySearchDelegate extends SearchDelegate {
         itemCount: name.length,
         itemBuilder: (context, index) {
           return ListTile(
+            key: const Key('searchResults'),
             leading: CircleAvatar(
               backgroundImage: NetworkImage(
                 petProvider

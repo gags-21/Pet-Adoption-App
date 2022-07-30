@@ -7,24 +7,71 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:pet_adoption_app_task/main.dart';
+import 'package:network_image_mock/network_image_mock.dart';
+import 'package:pet_adoption_app_task/provider/pet_details_provider.dart';
+import 'package:pet_adoption_app_task/screens/details_page.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  // find widgets
+  final adoptedButton = find.byKey(const ValueKey('adoptedButton'));
+  final adoptButton = find.byKey(const ValueKey('adoptButton'));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('Adopt Button test', (WidgetTester tester) async {
+    Widget testApp({required Widget child}) {
+      return MaterialApp(
+        home: ChangeNotifierProvider(
+            create: (_) => PetDetailsProvider()..initialize(), child: child),
+      );
+    }
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // execute test
+    await mockNetworkImagesFor(
+      () => tester.pumpWidget(
+        testApp(
+          child: DetailsPage(
+            pet: PetDetailsProvider().petDetails(1),
+            index: 1,
+          ),
+        ),
+      ),
+    );
+    await tester.tap(adoptButton);
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // result
+    expect(
+        find.text(
+            'You’ve now adopted \n 💙 ${PetDetailsProvider().petName(1)} 💙'),
+        findsOneWidget);
+  });
+
+  testWidgets('Adopted Button test', (WidgetTester tester) async {
+    Widget testApp({required Widget child}) {
+      return MaterialApp(
+        home: ChangeNotifierProvider(
+            create: (_) => PetDetailsProvider()..initialize(), child: child),
+      );
+    }
+
+    // execute test
+    await mockNetworkImagesFor(
+      () => tester.pumpWidget(
+        testApp(
+          child: DetailsPage(
+            pet: PetDetailsProvider().petDetails(1),
+            index: 1,
+          ),
+        ),
+      ),
+    );
+    // await tester.tap(adoptButton);
+    await tester.pump();
+
+    // result
+    expect(
+        find.text(
+            'You’ve now adopted \n 💙 ${PetDetailsProvider().petName(1)} 💙'),
+        findsNothing);
   });
 }

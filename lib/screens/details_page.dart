@@ -304,6 +304,7 @@ class _DetailsPageState extends State<DetailsPage> {
   GestureDetector longButton(BuildContext context,
       {required Function() onTap, required String title}) {
     return GestureDetector(
+      key: title == 'Adopt Me' ? Key('adoptButton') : Key('adoptedButton'),
       onTap: onTap,
       child: Container(
         height: 50,
