@@ -69,7 +69,7 @@ class PetDetailsProvider extends ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     // final encodedDetailsMap = _prefs.getString('allPetDetails');
     // petDetailsMap = json.decode(encodedDetailsMap ?? petDetailsMap.toString());
-    prefs.clear();
+    // prefs.clear();
     for (int i = 0; i < 5; i++) {
       final petDetailsOf$i = prefs.getStringList('petDetailsOf$i');
       petDetailsMap.update(i, (value) {
