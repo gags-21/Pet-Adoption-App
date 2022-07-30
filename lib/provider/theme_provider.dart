@@ -3,9 +3,13 @@ import 'package:pet_adoption_app_task/models/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
+  // default ThemeMode
   ThemeMode themeMode = ThemeMode.system;
+
+  // providing theme details
   bool get isDarkMode => themeMode == ThemeMode.dark;
 
+  // changing theme mode
   Future<ThemeMode> toggleTheme(bool toDark) async {
     themeMode = toDark ? ThemeMode.dark : ThemeMode.light;
 
@@ -15,10 +19,11 @@ class ThemeProvider extends ChangeNotifier {
     return themeMode;
   }
 
+  //* initializing theme mode
   initialize() async {
     //shared pref
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    final theme = _prefs.getString('theme') ?? 'system';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final theme = prefs.getString('theme') ?? 'system';
     if (theme == 'dark') {
       themeMode = ThemeMode.dark;
     } else if (theme == 'light') {
@@ -30,6 +35,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 }
 
+// Custom Theme Data
 class MyThemes {
   static final darkTheme = ThemeData.dark().copyWith(
     appBarTheme: AppBarTheme(

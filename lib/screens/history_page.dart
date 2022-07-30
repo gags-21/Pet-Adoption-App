@@ -11,49 +11,54 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<PetDetailsProvider>(builder: (context, petProvider, _) {
-        List<PetDetails> adoptedPets = petProvider.adoptedPets();
-        return Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                'History 🗓️',
-                style: headlineTextStyle,
+      body: Consumer<PetDetailsProvider>(
+        builder: (context, petProvider, _) {
+          List<PetDetails> adoptedPets = petProvider.adoptedPets();
+          return Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  'History 🗓️',
+                  style: headlineTextStyle,
+                ),
               ),
-            ),
-            Divider(),
-            Expanded(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                itemCount: adoptedPets.length,
-                itemBuilder: (context, index) {
-                  return Consumer<PetDetailsProvider>(
+              const Divider(),
+
+              // List of adopted pets
+              Expanded(
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: adoptedPets.length,
+                  itemBuilder: (context, index) {
+                    return Consumer<PetDetailsProvider>(
                       builder: (context, petProvider, _) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          adoptedPets[index].image.toString(),
-                        ),
-                      ),
-                      title: Text(
-                        adoptedPets[index].name.toString(),
-                      ),
-                      subtitle: Text(
-                        '${adoptedPets[index].type} | Date: ${adoptedPets[index].adoptedAt!.day}/${adoptedPets[index].adoptedAt!.month}/${adoptedPets[index].adoptedAt!.year}',
-                      ),
-                      trailing: Text(
-                        '₹ 100',
-                        style: priceTextStyle.copyWith(fontSize: 20),
-                      ),
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              adoptedPets[index].image.toString(),
+                            ),
+                          ),
+                          title: Text(
+                            adoptedPets[index].name.toString(),
+                          ),
+                          subtitle: Text(
+                            '${adoptedPets[index].type} | Date: ${adoptedPets[index].adoptedAt!.day}/${adoptedPets[index].adoptedAt!.month}/${adoptedPets[index].adoptedAt!.year}',
+                          ),
+                          // trailing: Text(
+                          //   '₹ 100',
+                          //   style: priceTextStyle.copyWith(fontSize: 20),
+                          // ),
+                        );
+                      },
                     );
-                  });
-                },
+                  },
+                ),
               ),
-            ),
-          ],
-        );
-      }),
+            ],
+          );
+        },
+      ),
     );
   }
 }

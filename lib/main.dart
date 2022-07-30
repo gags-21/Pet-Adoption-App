@@ -6,6 +6,7 @@ import 'package:pet_adoption_app_task/screens/home_page.dart';
 import 'package:provider/provider.dart';
 
 import 'provider/pet_details_provider.dart';
+import 'util/search_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,6 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           final themeProvider = Provider.of<ThemeProvider>(context);
           return MaterialApp(
-            title: 'Flutter Demo',
             themeMode: themeProvider.themeMode,
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
@@ -47,7 +47,7 @@ class MyHomePageState extends StatefulWidget {
 }
 
 class _MyHomePageStateState extends State<MyHomePageState> {
-  List screens = [
+  List screens = const [
     HomePage(),
     HistoryPage(),
   ];
@@ -57,8 +57,8 @@ class _MyHomePageStateState extends State<MyHomePageState> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10),
+        leading: const Padding(
+          padding: EdgeInsets.only(top: 10, bottom: 10, left: 10),
           child: CircleAvatar(
             backgroundImage: NetworkImage(
                 'https://static.vecteezy.com/system/resources/previews/007/537/995/non_2x/dog-logo-cartoon-cute-pet-smile-puppy-mascot-wear-glasses-on-white-background-vector.jpg'),
@@ -67,29 +67,28 @@ class _MyHomePageStateState extends State<MyHomePageState> {
         actions: [
           IconButton(
             key: const Key('searchButton'),
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               showSearch(context: context, delegate: MySearchDelegate());
             },
           ),
           IconButton(
-            icon: Icon(Icons.sunny),
+            icon: const Icon(Icons.sunny),
             onPressed: () {
+              // Toggling the theme mode
               themeProvider.isDarkMode
-                  ? // toggle to light : //toggle to dark
-                  themeProvider.toggleTheme(false)
+                  ? themeProvider.toggleTheme(false)
                   : themeProvider.toggleTheme(true);
             },
           ),
         ],
-        title: const Text('User Name'),
+        title: const Text('Joel Dsouza'),
       ),
       body: screens[currentScreen],
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: BottomNavigationBar(
           elevation: 0,
-          showSelectedLabels: false,
           showUnselectedLabels: false,
           selectedItemColor: accentColor,
           currentIndex: currentScreen,
@@ -98,7 +97,7 @@ class _MyHomePageStateState extends State<MyHomePageState> {
               currentScreen = index;
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
               label: 'Home',
               icon: Icon(Icons.home),

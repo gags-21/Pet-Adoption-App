@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:pet_adoption_app_task/models/pet_details_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PetDetailsProvider extends ChangeNotifier {
-  // PetDetails pr = PetDetails.fromList(petDetailsMap[1]!.toList());
-
-  // providing the pet details to the other screens
+  //* providing the pet details to the other screens
 
   int get totalPets => petDetailsMap.length;
 
@@ -46,31 +42,29 @@ class PetDetailsProvider extends ChangeNotifier {
     return petNames;
   }
 
-  // updating changes to the pet details
+  //* updating changes to the pet details
 
   void isAdoptedUpdate(bool isAdoptedd, int index) async {
     petDetailsMap.update(index, (value) {
       value[4] = isAdoptedd ? 'true' : 'false';
       value[5] = DateTime.now().toString();
-      // '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}';
       return value;
     });
 
-    // Shared Prefs
+    // Storing in Shared Prefs
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // String encodedDetailsMap = json.encode(petDetailsMap);
     prefs.setStringList('petDetailsOf$index', petDetailsMap[index]!.toList());
 
-    // pr.isAdopted = isAdoptedd ? 'true' : 'false';
     notifyListeners();
   }
 
+  // * initializing the pet details at start of the app
   initialize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final encodedDetailsMap = _prefs.getString('allPetDetails');
-    // petDetailsMap = json.decode(encodedDetailsMap ?? petDetailsMap.toString());
     // prefs.clear();
-    for (int i = 0; i < 5; i++) {
+
+    // loading the pet details from the shared prefs
+    for (int i = 0; i < petDetailsMap.length; i++) {
       final petDetailsOf$i = prefs.getStringList('petDetailsOf$i');
       petDetailsMap.update(i, (value) {
         return petDetailsOf$i != null
@@ -82,6 +76,7 @@ class PetDetailsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //* Data for the pet details
   static Map<int, List<String>> petDetailsMap = {
     0: [
       'Cat',
@@ -113,12 +108,68 @@ class PetDetailsProvider extends ChangeNotifier {
       'https://thumbs.dreamstime.com/b/single-black-kitten-white-background-big-eyes-one-90775523.jpg',
       '6 mo.',
       'false',
-      'Testing',
+      '',
     ],
     4: [
       'Cat',
       'Lola',
       'https://media.istockphoto.com/photos/ginger-cat-picture-id1073475928?k=20&m=1073475928&s=612x612&w=0&h=50Dbbf5cz_-NaS74tLY64PubIWMPTu09DnUnKd8z1ag=',
+      '6 mo.',
+      'false',
+      '',
+    ],
+    5: [
+      'Dog',
+      'Max',
+      'https://thumbs.dreamstime.com/b/small-black-dog-looking-sideways-isolated-white-background-breedless-mixed-breed-canine-curious-222762519.jpg',
+      '6 mo.',
+      'false',
+      '',
+    ],
+    6: [
+      'Dog',
+      'Charlie',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_ZhLBCD6wvUKiCqfJoMnikArR5hWygaGl9mmbm64TcAsSJ6Qya3MjnOCPfLmSP6fll6I&usqp=CAU',
+      '6 mo.',
+      'false',
+      '',
+    ],
+    7: [
+      'Cat',
+      'Daizy',
+      'https://media.istockphoto.com/photos/furry-british-cat-white-color-on-isolated-black-background-picture-id813499684?k=20&m=813499684&s=612x612&w=0&h=KYoDrE307ne0Emr3md0mbaKHmeor-E9bGA_gr4n08Tc=',
+      '6 mo.',
+      'false',
+      '',
+    ],
+    8: [
+      'Cat',
+      'Bailey',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYAYwAsuxKXRE8Wt_csyXI3EXrAItShjClbypqU4diUIxECmGonnbEUMxuOAusijMQosQ&usqp=CAU',
+      '6 mo.',
+      'false',
+      '',
+    ],
+    9: [
+      'Cat',
+      'Tucker',
+      'https://i.scdn.co/image/ab67616d0000b2734835de0a1a906adc6246a3ba',
+      '6 mo.',
+      'false',
+      '',
+    ],
+    10: [
+      'Dog',
+      'Jasper',
+      'https://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2014/11/8/1415466887744/Labrador-puppy-012.jpg?width=620&quality=85&fit=max&s=6ce4c2a6e28357cf66441d89a8a1c7ba',
+      '6 mo.',
+      'false',
+      '',
+    ],
+    11: [
+      'Dog',
+      'Simba',
+      'https://c.neh.tw/thumb/f/720/6608244248150016.jpg',
       '6 mo.',
       'false',
       '',

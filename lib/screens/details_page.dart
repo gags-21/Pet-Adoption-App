@@ -2,9 +2,6 @@ import 'dart:math';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:hover_widget/hover_widget.dart';
 import 'package:pet_adoption_app_task/models/constants.dart';
 import 'package:pet_adoption_app_task/models/pet_details_model.dart';
 import 'package:provider/provider.dart';
@@ -23,11 +20,14 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  // Gennerating a random price for pet
   int price = Random().nextInt(10000) + 5000;
+
   late ConfettiController _confettiController;
 
   @override
   void initState() {
+    // initializing the confetti controller
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 3));
     super.initState();
@@ -35,6 +35,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   void dispose() {
+    // disposing the confetti controller
     _confettiController.dispose();
     super.dispose();
   }
@@ -66,47 +67,45 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                       Expanded(
                         flex: 2,
-                        child: Container(
-                          // height: 200,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(widget.pet.name.toString(),
-                                  style: headlineTextStyle),
-                              Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color.fromARGB(221, 233, 132, 132),
-                                    width: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.pet.name.toString(),
+                                style: headlineTextStyle),
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      const Color.fromARGB(221, 233, 132, 132),
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                                color: const Color.fromARGB(90, 233, 132, 132),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    widget.pet.type.toString(),
                                   ),
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Color.fromARGB(90, 233, 132, 132),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      widget.pet.type.toString(),
-                                    ),
-                                    VerticalDivider(
-                                      color: Colors.black87,
-                                      thickness: 1,
-                                    ),
-                                    Text(widget.pet.age.toString()),
-                                  ],
-                                ),
+                                  const VerticalDivider(
+                                    color: Colors.black87,
+                                    thickness: 1,
+                                  ),
+                                  Text(widget.pet.age.toString()),
+                                ],
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.all(8.0).copyWith(left: 0),
-                                child: Text('₹ $price', style: priceTextStyle),
-                              ),
-                            ],
-                          ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.all(8.0).copyWith(left: 0),
+                              child: Text('₹ $price', style: priceTextStyle),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -122,19 +121,19 @@ class _DetailsPageState extends State<DetailsPage> {
                             labelColor: accentColor,
                             indicatorColor: accentColor,
                             unselectedLabelColor: Colors.grey,
-                            tabs: [
+                            tabs: const [
                               Tab(text: 'Skills'),
                               Tab(text: 'History'),
                             ],
                           ),
                         ),
-                        Container(
+                        const SizedBox(
                           height: 200,
                           child: TabBarView(
                             physics: BouncingScrollPhysics(),
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(20),
+                                padding: EdgeInsets.all(20),
                                 child: Text(
                                   '''
             ✅   Skills one
@@ -150,7 +149,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(20),
+                                padding: EdgeInsets.all(20),
                                 child: Text(
                                   '''
             🕐   History one
@@ -198,9 +197,6 @@ class _DetailsPageState extends State<DetailsPage> {
                 blastDirection: 180 + 45,
                 numberOfParticles: 20,
                 minBlastForce: 15,
-                // emissionFrequency: 0.5,
-                // particleDrag: 0.5,
-                // shouldLoop: false,
                 colors: confettiColors,
               ),
             ),
@@ -220,7 +216,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         // adoption functionality
                         petProvider.isAdoptedUpdate(true, widget.index);
 
-                        // confetti & logic
+                        //  play confetti animation
                         setState(() {
                           _confettiController.play();
                         });
@@ -234,7 +230,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             return Padding(
                               padding: const EdgeInsets.all(20),
                               child: Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(20),
@@ -247,7 +243,6 @@ class _DetailsPageState extends State<DetailsPage> {
                                       children: [
                                         Expanded(
                                           flex: 4,
-                                          // TODO : remove Hero if not userfull
                                           child: Hero(
                                             tag:
                                                 'Pet Card Image ${widget.pet.image.toString()}',
@@ -301,10 +296,13 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 
+  // Long Button
   GestureDetector longButton(BuildContext context,
       {required Function() onTap, required String title}) {
     return GestureDetector(
-      key: title == 'Adopt Me' ? Key('adoptButton') : Key('adoptedButton'),
+      key: title == 'Adopt Me'
+          ? const Key('adoptButton')
+          : const Key('adoptedButton'),
       onTap: onTap,
       child: Container(
         height: 50,
@@ -317,7 +315,7 @@ class _DetailsPageState extends State<DetailsPage> {
         child: Center(
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
