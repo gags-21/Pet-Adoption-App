@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_adoption_app_task/models/constants.dart';
@@ -223,9 +224,16 @@ class _DetailsPageState extends State<DetailsPage> {
                     ? 'Adopt Me'
                     : 'Adopted',
                 onTap: !petProvider.isAdopted(widget.index)
-                    ? () {
+                    ? () async {
                         // adoption functionality
                         petProvider.isAdoptedUpdate(true, widget.index);
+
+                        // pet sound
+                        final audioPlayer = AudioPlayer();
+                        widget.pet.type == 'Dog'
+                            ? audioPlayer.setSourceAsset('sounds/dog_bark.mp3')
+                            : audioPlayer.setSourceAsset('sounds/cat_meow.mp3');
+                        audioPlayer.resume();
 
                         //  play confetti animation
                         setState(() {
