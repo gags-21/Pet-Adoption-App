@@ -109,9 +109,11 @@ class _HomePageState extends State<HomePage> {
                     child: Hero(
                       tag: 'Pet Card Image ${petDetails.image}',
                       child: Padding(
-                        padding: const EdgeInsets.all(25),
-                        child: Image.network(
-                          petDetails.image.toString(),
+                        padding: const EdgeInsets.all(15),
+                        child: Center(
+                          child: Image.network(
+                            petDetails.image.toString(),
+                          ),
                         ),
                       ),
                     ),
